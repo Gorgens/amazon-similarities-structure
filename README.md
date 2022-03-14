@@ -1,0 +1,1 @@
+# amazon-similarities_structure
