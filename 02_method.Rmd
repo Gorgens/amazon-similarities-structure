@@ -1,0 +1,74 @@
+---
+title: "Agrupamentos"
+output: html_notebook
+---
+
+```{r}
+library(factoextra)
+library(cluster)
+require(dplyr)
+```
+
+```{r}
+full = read.csv2('C:/Users/User/Insync/eric.gorgens@ufvjm.edu.br/Google Drive/pesquisa/paper e orientações/eba transectos lidar/2022 - Robson - Agrupamento estrutura e diversidade/dados_full_10cm.csv')
+```
+
+Espécies mais importantes
+
+```{r}
+fullSpecies = full %>% filter(species != 'Indet.') %>%
+  filter(epiteto != 'sp.') %>%
+  filter(epiteto != 'indet')
+
+
+speciesSummary = fullSpecies %>% group_by(species) %>%
+  summarise(trees = n()/length(full$species) * 100) %>%
+  arrange(desc(trees))
+
+speciesSummary
+```
+
+
+
+Importa dados com árvores maiores que 10 cm.
+
+```{r}
+dap10 <- read.csv2('dados/dados-gerais-final-10.csv')
+df = dap10[,2:30]
+row.names(df) = dap10$Site.code
+df <- na.omit(df)
+df <- scale(df)
+```
+
+Analisa quantidade de grupos por dois métodos diferentes.
+
+```{r}
+fviz_nbclust(df, kmeans, method = "wss", k.max = 30)
+```
+
+
+
+```{r}
+#calculate gap statistic based on number of clusters
+gap_stat <- clusGap(df,
+                    FUN = kmeans,
+                    nstart = 25,
+                    K.max = 30,
+                    B = 50)
+
+#plot number of clusters vs. gap statistic
+fviz_gap_stat(gap_stat)
+```
+
+```{r}
+km <- kmeans(df, centers = 5, nstart = 25)
+fviz_cluster(km, data = df)
+```
+
+
+```{r}
+aggregate(USArrests, by=list(cluster=km$cluster), mean)
+```
+
+
+Referencia: [link](https://www.statology.org/k-means-clustering-in-r/).
