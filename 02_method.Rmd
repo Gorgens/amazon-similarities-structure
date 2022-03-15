@@ -6,11 +6,25 @@ output: html_notebook
 ```{r}
 library(factoextra)
 library(cluster)
-require(dplyr)
+require(tidyverse)
+require(terra)
+require(raster)
+require(sp)
+library(mda)
 ```
+
+Importa base de dados ForestPlot
 
 ```{r}
 full = read.csv2('C:/Users/User/Insync/eric.gorgens@ufvjm.edu.br/Google Drive/pesquisa/paper e orientações/eba transectos lidar/2022 - Robson - Agrupamento estrutura e diversidade/dados_full_10cm.csv')
+full[full$site == 'STO','site'] <- 'STO.P'
+full[full$site == 'STP','site'] <- 'STO.P'
+full[full$site == 'MUF','site'] <- 'MUF.U'
+full[full$site == 'MUU','site'] <- 'MUF.U'
+full[full$site == 'ETB','site'] <- 'ETA'
+full[full$site == 'ETE','site'] <- 'ETA'
+full[full$site == 'ETF','site'] <- 'ETA'
+
 ```
 
 Espécies mais importantes
@@ -20,20 +34,129 @@ fullSpecies = full %>% filter(species != 'Indet.') %>%
   filter(epiteto != 'sp.') %>%
   filter(epiteto != 'indet')
 
-
-speciesSummary = fullSpecies %>% group_by(species) %>%
-  summarise(trees = n()/length(full$species) * 100) %>%
+species10 = fullSpecies %>% group_by(species) %>%
+  summarise(trees = n()/nrow(full) * 100) %>%
   arrange(desc(trees))
 
-speciesSummary
+species70 = fullSpecies %>% filter(d >= 70) %>%
+  group_by(species) %>%
+  summarise(trees = n()/nrow(full) * 100) %>%
+  arrange(desc(trees))
+```
+
+Formula para diversidade de Shannon
+
+```{r}
+shannon = function(vector){
+  termo1 = -1 * table(vector)/length(vector)
+  termo2 = log(table(vector)/length(vector))
+  H = sum(termo1 * termo2)
+}
+```
+
+Analisa variáveis dendrométricas por sitio
+
+```{r}
+dados10 = full %>% group_by(site) %>%
+  summarise(spH = shannon(species),
+            genH = shannon(genero),
+            famH = shannon(family),
+            dmean = mean(d),
+            dmax = max(d),
+            dsd = sd(d),
+            wdmean = mean(wd),
+            wdsd = sd(wd))
+```
+
+```{r}
+dados70 = full %>% filter(d >= 70) %>%
+  group_by(site) %>%
+  summarise(spH = shannon(species),
+            genH = shannon(genero),
+            famH = shannon(family),
+            dmean = mean(d),
+            dmax = max(d),
+            dsd = sd(d),
+            wdmean = mean(wd),
+            wdsd = sd(wd)) 
+```
+
+Analisa as 100 principais especies por sitio
+
+```{r}
+esp10 = full %>% filter(species %in% head(species10$species, 100)) %>%
+  group_by(site, species) %>%
+  summarise(n = n() / length(full$species) * 100) %>%
+  spread(species, n)
+
+
+esp10[is.na(esp10)] <- 0
+```
+
+```{r}
+esp70 = full %>% filter(species %in% head(species70$species, 100)) %>%
+  group_by(site, species) %>%
+  summarise(n = n() / length(full$species) * 100) %>%
+  spread(species, n)
+
+
+esp70[is.na(esp70)] <- 0
+```
+
+Importa coordenadas sitios
+
+```{r}
+sitioCoord = read.csv('dados/siteForestPlots_en.csv')
+```
+
+Unir dados
+
+```{r}
+df = merge(sitioCoord, dados10, by.x = 'Site', by.y = 'site', all = TRUE)
+df = merge(df, dados70, by.x = 'Site', by.y = 'site', all = TRUE)
+df = merge(df, esp10, by.x = 'Site', by.y = 'site', all = TRUE)
+df = merge(df, esp70, by.x = 'Site', by.y = 'site', all = TRUE)
+```
+
+
+Importa biogeografia
+
+
+```{r}
+coordinates(df) <- ~Longitude+Latitude
+proj4string(df) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+```
+
+
+```{r}
+morrone = shapefile('dados/Morrones.shp', encoding = 'UTF-8')
+morrone <- spTransform(morrone, crs(df))
+```
+
+
+```{r}
+df = cbind(df, over(df, morrone))
+```
+
+
+## Discriminante
+
+```{r}
+# Fit the model
+model <- mda(Species~., data = train.transformed)
+model
+# Make predictions
+predicted.classes <- model %>% predict(test.transformed)
+# Model accuracy
+mean(predicted.classes == test.transformed$Species)
 ```
 
 
 
-Importa dados com árvores maiores que 10 cm.
+## Agrupamento
+
 
 ```{r}
-dap10 <- read.csv2('dados/dados-gerais-final-10.csv')
 df = dap10[,2:30]
 row.names(df) = dap10$Site.code
 df <- na.omit(df)
