@@ -1,0 +1,39 @@
+---
+title: "Results"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE,
+                      message = FALSE,
+                      echo = FALSE)
+```
+```{r}
+require(factoextra)
+require(cluster)
+require(tidyverse)
+require(terra)
+require(raster)
+require(sp)
+require(randomForest)
+require(knitr)
+```
+
+```{r}
+kable(dados10, digits = 2, caption = 'Resume of the sites characteristics considering trees greater than 10 cm')
+```
+
+```{r}
+kable(dados70, digits = 2, caption = 'Resume of the sites characteristics considering trees greater than 70 cm')
+```
+
+
+```{r}
+kable(importance(rf10), digits = 2, col.names = c('Madeira', 'Pará', 'Rondônia', 'Roraima', 'Xingu-Tapajos', 'Decrease Accuracy', 'Decrease Gini') ,caption = 'Variable importace to classfy by province, and for general random forest performance.')
+```
+
+
+```{r}
+kable(importance(rf70), digits = 2, col.names = c('Madeira', 'Pará', 'Rondônia', 'Roraima', 'Xingu-Tapajos', 'Decrease Accuracy', 'Decrease Gini') ,caption = 'Variable importace to classfy by province, and for general random forest performance.')
+```
+

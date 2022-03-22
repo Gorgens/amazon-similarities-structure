@@ -3,6 +3,12 @@ title: "Methods"
 output: html_notebook
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE,
+                      message = FALSE,
+                      echo = FALSE)
+```
+
 ```{r}
 require(factoextra)
 require(cluster)
@@ -10,13 +16,11 @@ require(tidyverse)
 require(terra)
 require(raster)
 require(sp)
-require(rpart)
-require(rpart.plot)
 require(randomForest)
 require(knitr)
 ```
 
-Importa base de dados ForestPlot
+The study is based on the ForestPlots plot network, which includes measurements in the region where the presence of giant trees in the Brazilian Amazon was recently identified (https://www.forestplots.net/). The plots were recorded by different research teams (Appendix S3), and represent primary or secondary forest. We inlcuded infurther analysis only plots in which at least ≥ 90% of the trees were identified at least at genus level. Botanical identification was harmonized using the Taxonomic Name Resolution Service (https://tnrs.iplantcollaborative.org), Missouri Botanical Garden (https://www.missouribotanicalgarden.org/), and Flora package in R. Within the plots, each tree had its diameter (d) recorded. 
 
 ```{r}
 full = read.csv2('C:/Users/User/Insync/eric.gorgens@ufvjm.edu.br/Google Drive/pesquisa/paper e orientações/eba transectos lidar/2022 - Robson - Agrupamento estrutura e diversidade/dados_full_10cm.csv')
@@ -30,7 +34,7 @@ full[full$site == 'ETF','site'] <- 'ETA'
 
 ```
 
-Espécies mais importantes
+The threshold of 70 cm, based on the definition of big tree suggested by Harris et al (2021), was used to build the dataset of big trees. Each tree in the dataset was associated to a basic wood density using the lowest available taxonomic level of botanical identifications (i.e. species or genus) and the corresponding average wood density recorded in the Global Wood Density Database (GWDD; Chave et al., 2009; Zanne et al., 2009).
 
 ```{r}
 fullSpecies = full %>% filter(species != 'Indet.') %>%
@@ -47,7 +51,8 @@ species70 = fullSpecies %>% filter(d >= 70) %>%
   arrange(desc(trees))
 ```
 
-Formula para diversidade de Shannon
+The plots were totalized in terms of structure and diversity. The diversity was computed using the Shannon index, for species, genus and family level. The structural attributes were computed to mean, maximum and standard deviation for diameter; and mean and standard deviation for basic wood density. 
+
 
 ```{r}
 shannon = function(vector){
@@ -56,8 +61,6 @@ shannon = function(vector){
   H = sum(termo1 * termo2)
 }
 ```
-
-Analisa variáveis dendrométricas por sitio
 
 ```{r}
 dados10 = full %>% group_by(site) %>%
@@ -84,10 +87,10 @@ dados70 = full %>% filter(d >= 70) %>%
             wdsd_70 = sd(wd)) 
 ```
 
-Analisa as 100 principais especies por sitio
+We also estimated the forest diversity, characterizing the communities in terms of species composition and ecological importance (McElhinny et al. 2005). Species diversity patterns of large trees were calculated considering Shannon diversity index (H'). The species accumulation curve was calculated using all plots in order to compare the theoretical and actual numbers of recorded species (Chao et al. 2014). The relative density of the hyperdominant species was computed for all trees above diameter of 10 and 70 cm, and the 50 most dense species was retained to describe the sites. 
 
 ```{r}
-esp10 = full %>% filter(species %in% head(species10$species, 100)) %>%
+esp10 = full %>% filter(species %in% head(species10$species, 50)) %>%
   group_by(site, species) %>%
   summarise(n = n() / length(full$species) * 100) %>%
   spread(species, n)
@@ -97,7 +100,7 @@ esp10[is.na(esp10)] <- 0
 ```
 
 ```{r}
-esp70 = full %>% filter(species %in% head(species70$species, 100)) %>%
+esp70 = full %>% filter(species %in% head(species70$species, 50)) %>%
   group_by(site, species) %>%
   summarise(n = n() / length(full$species) * 100) %>%
   spread(species, n)
@@ -106,73 +109,113 @@ esp70 = full %>% filter(species %in% head(species70$species, 100)) %>%
 esp70[is.na(esp70)] <- 0
 ```
 
-Importa coordenadas sitios
+To explore patterns between the plots considering structure and diversity we implemented the kmeans analysys with increasing numbers of clusters. The algorithm considered the source dataset and ten synthetic datasets with similar distribution properties to determine the interrelationships between the attributes through their dimensions (components). The groups were built base on the attributes of structure (dbh and wood density) and diversity (species, genus and familly), together with the density of the 50 hyperdominant species.
 
 ```{r}
 sitioCoord = read.csv('dados/siteForestPlots_en.csv')
 ```
 
-Unir dados
-
 ```{r}
-df = merge(sitioCoord, dados10, by.x = 'Site', by.y = 'site', all = TRUE)
-df = merge(df, dados70, by.x = 'Site', by.y = 'site', all = TRUE)
-df = merge(df, esp10, by.x = 'Site', by.y = 'site', all = TRUE, suffixes = c(".x","_10"))
-df = merge(df, esp70, by.x = 'Site', by.y = 'site', all = TRUE, suffixes = c("_10","_70"))
+tokmeans = merge(sitioCoord, dados10, by.x = 'Site', by.y = 'site', all = TRUE)
+tokmeans = merge(tokmeans, dados70, by.x = 'Site', by.y = 'site', all = TRUE)
+tokmeans = merge(tokmeans, esp10, by.x = 'Site', by.y = 'site', all = TRUE, suffixes = c(".x","_10"))
+tokmeans = merge(tokmeans, esp70, by.x = 'Site', by.y = 'site', all = TRUE, suffixes = c("_10","_70"))
+row.names(tokmeans) = tokmeans$Site
+tokmeans[is.na(tokmeans)] <- 0
+tokmeans = tokmeans[, c(8:223)]
+tokmeans <- scale(tokmeans)
 ```
 
+```{r}
+#calculate gap statistic based on number of clusters
+gap_stat <- clusGap(tokmeans,
+                    FUN = kmeans,
+                    nstart = 25,
+                    K.max = 10,
+                    B = 50)
 
-Importa biogeografia
+#plot number of clusters vs. gap statistic
+fviz_gap_stat(gap_stat)
+```
+
+```{r}
+km <- kmeans(tokmeans, centers = 3, nstart = 25)
+fviz_cluster(km, data = tokmeans)
+```
+
+We then associated to each studied site based on its repective geolocation, the biogeographic region proposed by Morrone (2014). This biogeographic analyses considered terrestrial plant and animal taxa to divide the Brazilian Amazon into eight regions. We have to exclude three biogeographic regions (i.e. Pantepui, Guianan Lowlands and Cerrado) due to single site ocurrence. We used the biogepgraphic regions to explore the characteristics of structure and diversity which differentiate more each region. We explored the differences between the regions based on two perspectives: database considering all trees (d >= 10 cm) and database consdering only bog trees (d >= 70 cm).
 
 
 ```{r}
-coordinates(df) <- ~Longitude+Latitude
-proj4string(df) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+toRf10 = merge(sitioCoord, dados10, by.x = 'Site', by.y = 'site', all = TRUE)
+toRf10 = merge(toRf10, esp10, by.x = 'Site', by.y = 'site', all = TRUE)
 ```
 
+```{r}
+coordinates(toRf10) <- ~Longitude+Latitude
+proj4string(toRf10) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+```
 
 ```{r}
 morrone = shapefile('dados/Morrones.shp', encoding = 'UTF-8')
-morrone = spTransform(morrone, crs(df))
+morrone = spTransform(morrone, crs(toRf10))
+```
+
+```{r}
+toRf10 = cbind(toRf10, over(toRf10, morrone))
+```
+
+```{r}
+distrib = toRf10@data %>% group_by(Province_1) %>% summarise(sites = n())
+
+kable(distrib, digits = 0, col.names = c("Region", "Number of sites"), caption = 'Number of sites by biogegraphic region proposed by Morrone (2014)')
+```
+
+```{r}
+toRf10 = toRf10@data %>% filter(Province_1 %in% c("Madeira province", "Pará province", "Roraima province", "Xingu-Tapajós province", "Rondônia province"))
+
+toRf10 = toRf10[, c(6:113, 117)]
+toRf10[is.na(toRf10)] <- 0
 ```
 
 
 ```{r}
-df = cbind(df, over(df, morrone))
-#head(df)
+toRf70 = merge(sitioCoord, dados70, by.x = 'Site', by.y = 'site', all = TRUE)
+toRf70 = merge(toRf70, esp70, by.x = 'Site', by.y = 'site', all = TRUE)
 ```
 
-
-## Discriminante
-
-(Implement) Retirar espécies com zero de densidade
-(Implement) Rodar randomForest para dados10, e dados70
-(Implement) Rodar randomForest para esp 10, e esp70
-
-Remove provinces with lower few inventored sites.
-
 ```{r}
-distrib = df@data %>% group_by(Province_1) %>% summarise(sites = n())
-distrib
+coordinates(toRf70) <- ~Longitude+Latitude
+proj4string(toRf70) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
 ```
 
-
+```{r}
+morrone = shapefile('dados/Morrones.shp', encoding = 'UTF-8')
+morrone = spTransform(morrone, crs(toRf70))
+```
 
 ```{r}
-dfAgrupamento = df@data %>% filter(Province_1 %in% c("Madeira province", "Pará province", "Roraima province", "Xingu-Tapajós province", "Rondônia province"))
+toRf70 = cbind(toRf70, over(toRf70, morrone))
+```
 
-dfAgrupamento = dfAgrupamento[, c(6:221, 225)]
-dfAgrupamento[is.na(dfAgrupamento)] <- 0
+```{r}
+toRf70 = toRf70@data %>% filter(Province_1 %in% c("Madeira province", "Pará province", "Roraima province", "Xingu-Tapajós province", "Rondônia province"))
+
+toRf70 = toRf70[, c(6:113, 117)]
+toRf70[is.na(toRf70)] <- 0
 ```
 
 After training a random forest, it is natural to ask which variables have the most predictive power. Variables with high importance are drivers of the outcome and their values have a significant impact on the outcome values. By contrast, variables with low importance might be omitted from a model, making it simpler and faster to fit and predict. Here are the definitions of the variable importance measures. The first measure is computed from permuting OOB data: For each tree, the prediction error on the out-of-bag portion of the data is recorded (error rate for classification, MSE for regression). Then the same is done after permuting each predictor variable. The difference between the two are then averaged over all trees, and normalized by the standard deviation of the differences. If the standard deviation of the differences is equal to 0 for a variable, the division is not done (but the average is almost always equal to 0 in that case).
 
 ```{r}
-rfAgrupamento = randomForest(factor(Province_1)~., data = dfAgrupamento, importance=TRUE, scale = TRUE)
+rf10 = randomForest(factor(Province_1)~., data = toRf10, importance=TRUE, scale = TRUE)
 ```
 
+
+
+
 ```{r}
-kable(importance(rfAgrupamento), digits = 2, col.names = c('Madeira', 'Pará', 'Rondônia', 'Roraima', 'Xingu-Tapajos', 'Decrease Accuracy', 'Decrease Gini') ,caption = 'Variable importace to classfy by province, and for general random forest performance.')
+rf70 = randomForest(factor(Province_1)~., data = toRf70, importance=TRUE, scale = TRUE)
 ```
 
 
