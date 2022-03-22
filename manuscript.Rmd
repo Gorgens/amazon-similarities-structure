@@ -1,0 +1,44 @@
+---
+title: "My Manuscript"
+author: "to be defined"
+date: "`r format(Sys.time(), '%d %b %Y %H:%M:%S %Z')`"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  bookdown::word_document2: default
+  bookdown::pdf_book:
+    base_format: rticles::springer_article
+    extra_dependencies: booktabs
+  bookdown::html_document2: default
+subtitle: Created in Rmarkdown
+titlerunning: My manuscript
+abstract: "Not yet defined \n"
+bibliography: bibliography.bib
+biblio-style: spbasic
+authors:
+- name: Jeffrey M. Perkel
+  address: Springer Nature, 1 New York Plaza, New York, NY
+  email: jeffrey.perkel@nature.com
+csl: abnt.csl
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE,
+                      message = FALSE,
+                      echo = FALSE)
+```
+
+
+## Material and methods
+
+```{r get-methods, child="02_method.Rmd"}
+# import the text from child_doc.Rmd
+```
+
+## Results
+
+```{r get-results, child="03_results.Rmd"}
+# import the text from child_doc.Rmd
+```

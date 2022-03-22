@@ -1,13 +1,9 @@
 ---
 title: "Methods"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(warning = FALSE,
-                      message = FALSE,
-                      echo = FALSE)
-```
 
 ```{r}
 require(factoextra)
@@ -122,7 +118,7 @@ tokmeans = merge(tokmeans, esp10, by.x = 'Site', by.y = 'site', all = TRUE, suff
 tokmeans = merge(tokmeans, esp70, by.x = 'Site', by.y = 'site', all = TRUE, suffixes = c("_10","_70"))
 row.names(tokmeans) = tokmeans$Site
 tokmeans[is.na(tokmeans)] <- 0
-tokmeans = tokmeans[, c(8:223)]
+tokmeans = tokmeans[, c(8:123)]
 tokmeans <- scale(tokmeans)
 ```
 
@@ -133,14 +129,10 @@ gap_stat <- clusGap(tokmeans,
                     nstart = 25,
                     K.max = 10,
                     B = 50)
-
-#plot number of clusters vs. gap statistic
-fviz_gap_stat(gap_stat)
 ```
 
 ```{r}
-km <- kmeans(tokmeans, centers = 3, nstart = 25)
-fviz_cluster(km, data = tokmeans)
+km <- kmeans(tokmeans, centers = 4, nstart = 25)
 ```
 
 We then associated to each studied site based on its repective geolocation, the biogeographic region proposed by Morrone (2014). This biogeographic analyses considered terrestrial plant and animal taxa to divide the Brazilian Amazon into eight regions. We have to exclude three biogeographic regions (i.e. Pantepui, Guianan Lowlands and Cerrado) due to single site ocurrence. We used the biogepgraphic regions to explore the characteristics of structure and diversity which differentiate more each region. We explored the differences between the regions based on two perspectives: database considering all trees (d >= 10 cm) and database consdering only bog trees (d >= 70 cm).
@@ -174,7 +166,7 @@ kable(distrib, digits = 0, col.names = c("Region", "Number of sites"), caption =
 ```{r}
 toRf10 = toRf10@data %>% filter(Province_1 %in% c("Madeira province", "Pará province", "Roraima province", "Xingu-Tapajós province", "Rondônia province"))
 
-toRf10 = toRf10[, c(6:113, 117)]
+toRf10 = toRf10[, c(6:63, 67)]
 toRf10[is.na(toRf10)] <- 0
 ```
 
@@ -190,7 +182,6 @@ proj4string(toRf70) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +to
 ```
 
 ```{r}
-morrone = shapefile('dados/Morrones.shp', encoding = 'UTF-8')
 morrone = spTransform(morrone, crs(toRf70))
 ```
 
@@ -201,7 +192,7 @@ toRf70 = cbind(toRf70, over(toRf70, morrone))
 ```{r}
 toRf70 = toRf70@data %>% filter(Province_1 %in% c("Madeira province", "Pará province", "Roraima province", "Xingu-Tapajós province", "Rondônia province"))
 
-toRf70 = toRf70[, c(6:113, 117)]
+toRf70 = toRf70[, c(6:63, 67)]
 toRf70[is.na(toRf70)] <- 0
 ```
 

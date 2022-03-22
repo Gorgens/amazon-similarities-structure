@@ -1,13 +1,10 @@
 ---
 title: "Results"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(warning = FALSE,
-                      message = FALSE,
-                      echo = FALSE)
-```
 ```{r}
 require(factoextra)
 require(cluster)
@@ -25,6 +22,17 @@ kable(dados10, digits = 2, caption = 'Resume of the sites characteristics consid
 
 ```{r}
 kable(dados70, digits = 2, caption = 'Resume of the sites characteristics considering trees greater than 70 cm')
+```
+
+
+```{r}
+#plot number of clusters vs. gap statistic
+fviz_gap_stat(gap_stat)
+```
+
+
+```{r}
+fviz_cluster(km, data = tokmeans)
 ```
 
 
