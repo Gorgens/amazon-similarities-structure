@@ -16,7 +16,9 @@ require(randomForest)
 require(knitr)
 ```
 
-The study is based on the ForestPlots plot network, which includes measurements in the region where the presence of giant trees in the Brazilian Amazon was recently identified (https://www.forestplots.net/). The plots were recorded by different research teams (Appendix S3), and represent primary or secondary forest. We inlcuded infurther analysis only plots in which at least ≥ 90% of the trees were identified at least at genus level. Botanical identification was harmonized using the Taxonomic Name Resolution Service (https://tnrs.iplantcollaborative.org), Missouri Botanical Garden (https://www.missouribotanicalgarden.org/), and Flora package in R. Within the plots, each tree had its diameter (d) recorded. 
+The study is based on the ForestPlots plot network, including recent plots where giant trees were reported in the Brazilian Amazon (https://www.forestplots.net/). The plots were monitored by different research teams (Appendix S3). Within the plots, each tree had its diameter (d) recorded. We filtered out plots where less than 90% of the trees have been identified, at least at genus level. Botanical identification was harmonized using the Taxonomic Name Resolution Service (https://tnrs.iplantcollaborative.org), Missouri Botanical Garden (https://www.missouribotanicalgarden.org/), and Flora package in R. 
+
+Each tree in the dataset was associated to a basic wood density using the lowest available taxonomic level of botanical identifications (i.e. species or genus) and the corresponding average wood density recorded in the Global Wood Density Database (GWDD; Chave et al., 2009; Zanne et al., 2009). The plots were totalized in terms of structure and diversity. The diversity was computed using the Shannon index, for species, genus and family level. The structural attributes were computed to mean, maximum and standard deviation for diameter; and mean and standard deviation for basic wood density. 
 
 ```{r}
 full = read.csv2('C:/Users/User/Insync/eric.gorgens@ufvjm.edu.br/Google Drive/pesquisa/paper e orientações/eba transectos lidar/2022 - Robson - Agrupamento estrutura e diversidade/dados_full_10cm.csv')
@@ -30,7 +32,7 @@ full[full$site == 'ETF','site'] <- 'ETA'
 
 ```
 
-The threshold of 70 cm, based on the definition of big tree suggested by Harris et al (2021), was used to build the dataset of big trees. Each tree in the dataset was associated to a basic wood density using the lowest available taxonomic level of botanical identifications (i.e. species or genus) and the corresponding average wood density recorded in the Global Wood Density Database (GWDD; Chave et al., 2009; Zanne et al., 2009).
+Further analysis was performed in two context: (1) considering all trees with diameter greater than 10 cm; and (2) considering only the bog trees (diameter graeter than 70 cm) (Figure 2). The threshold of 70 cm for diameter was suggested by Harris et al (2021) to define big trees in tropical forest. For both context (all trees, and big trees) we computed for each site the average of the diversity and structural parameters, and the relative density of the recorded species. The top-50 species in each dataset were retained to describe the sites.
 
 ```{r}
 fullSpecies = full %>% filter(species != 'Indet.') %>%
@@ -47,8 +49,7 @@ species70 = fullSpecies %>% filter(d >= 70) %>%
   arrange(desc(trees))
 ```
 
-The plots were totalized in terms of structure and diversity. The diversity was computed using the Shannon index, for species, genus and family level. The structural attributes were computed to mean, maximum and standard deviation for diameter; and mean and standard deviation for basic wood density. 
-
+Considering the big trees dataset, we estimated the forest diversity, characterizing the communities in terms of species composition and ecological importance (McElhinny et al. 2005). Species diversity patterns were calculated considering Shannon diversity index (H'). The species accumulation curve was computed to compare the theoretical and actual numbers of recorded species (Chao et al. 2014). 
 
 ```{r}
 shannon = function(vector){
@@ -83,7 +84,6 @@ dados70 = full %>% filter(d >= 70) %>%
             wdsd_70 = sd(wd)) 
 ```
 
-We also estimated the forest diversity, characterizing the communities in terms of species composition and ecological importance (McElhinny et al. 2005). Species diversity patterns of large trees were calculated considering Shannon diversity index (H'). The species accumulation curve was calculated using all plots in order to compare the theoretical and actual numbers of recorded species (Chao et al. 2014). The relative density of the hyperdominant species was computed for all trees above diameter of 10 and 70 cm, and the 50 most dense species was retained to describe the sites. 
 
 ```{r}
 esp10 = full %>% filter(species %in% head(species10$species, 50)) %>%
@@ -105,7 +105,7 @@ esp70 = full %>% filter(species %in% head(species70$species, 50)) %>%
 esp70[is.na(esp70)] <- 0
 ```
 
-To explore patterns between the plots considering structure and diversity we implemented the kmeans analysys with increasing numbers of clusters. The algorithm considered the source dataset and ten synthetic datasets with similar distribution properties to determine the interrelationships between the attributes through their dimensions (components). The groups were built base on the attributes of structure (dbh and wood density) and diversity (species, genus and familly), together with the density of the 50 hyperdominant species.
+To explore patterns between the plots considering structure and diversity, we implemented the k-means analysis with increasing numbers of clusters. The groups were built base on the attributes of structure (d and wood density) and diversity (species, genus and family diversity, and the relative density of top 50 species) considering all trees (d >= 10 cm) and big trees (d >= 70 cm). The algorithm compares the source dataset and synthetic datasets with similar distribution properties to determine the interrelationships between the attributes through their dimensions (components). 
 
 ```{r}
 sitioCoord = read.csv('dados/siteForestPlots_en.csv')
@@ -135,7 +135,7 @@ gap_stat <- clusGap(tokmeans,
 km <- kmeans(tokmeans, centers = 4, nstart = 25)
 ```
 
-We then associated to each studied site based on its repective geolocation, the biogeographic region proposed by Morrone (2014). This biogeographic analyses considered terrestrial plant and animal taxa to divide the Brazilian Amazon into eight regions. We have to exclude three biogeographic regions (i.e. Pantepui, Guianan Lowlands and Cerrado) due to single site ocurrence. We used the biogepgraphic regions to explore the characteristics of structure and diversity which differentiate more each region. We explored the differences between the regions based on two perspectives: database considering all trees (d >= 10 cm) and database consdering only bog trees (d >= 70 cm).
+Based on the geolocation, each site was associated to its respective biogeographic region proposed by Morrone (2014). The Morrone’s regions considered terrestrial plant and animal taxa to divide the Brazilian Amazon into eight regions. We exclude three biogeographic regions (i.e. Pantepui, Guianan Lowlands and Cerrado) due to single site occurrence. We used the biogeographical regions to explore structural and diversity characteristics which differentiating each of them. Furthermore, we explored the differences between the regions, analyzing the two contexts separately. The diversity and structural attributes for each context were used to classify the regions using a random forest algorithm, followed by analysis of importance of the variables.
 
 
 ```{r}
@@ -196,18 +196,14 @@ toRf70 = toRf70[, c(6:63, 67)]
 toRf70[is.na(toRf70)] <- 0
 ```
 
-After training a random forest, it is natural to ask which variables have the most predictive power. Variables with high importance are drivers of the outcome and their values have a significant impact on the outcome values. By contrast, variables with low importance might be omitted from a model, making it simpler and faster to fit and predict. Here are the definitions of the variable importance measures. The first measure is computed from permuting OOB data: For each tree, the prediction error on the out-of-bag portion of the data is recorded (error rate for classification, MSE for regression). Then the same is done after permuting each predictor variable. The difference between the two are then averaged over all trees, and normalized by the standard deviation of the differences. If the standard deviation of the differences is equal to 0 for a variable, the division is not done (but the average is almost always equal to 0 in that case).
-
 ```{r}
 rf10 = randomForest(factor(Province_1)~., data = toRf10, importance=TRUE, scale = TRUE)
 ```
-
-
 
 
 ```{r}
 rf70 = randomForest(factor(Province_1)~., data = toRf70, importance=TRUE, scale = TRUE)
 ```
 
-
+We analyzed the variable importance by permuting data. For each tree, the prediction error on the out-of-bag portion of the data is recorded (error rate for classification). Then the same is done after permuting each predictor variable. The difference between the two are then averaged over all trees, and normalized by the standard deviation of the differences. We considered two indicators of variable importance: decrease in average accuracy, and decrease in gini importance (mean decrease impurity). The analyzes were performed in R environment, with the help of packages randomForest and terra.
 

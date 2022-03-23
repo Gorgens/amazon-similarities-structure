@@ -17,15 +17,6 @@ require(knitr)
 ```
 
 ```{r}
-kable(dados10, digits = 2, caption = 'Resume of the sites characteristics considering trees greater than 10 cm')
-```
-
-```{r}
-kable(dados70, digits = 2, caption = 'Resume of the sites characteristics considering trees greater than 70 cm')
-```
-
-
-```{r}
 #plot number of clusters vs. gap statistic
 fviz_gap_stat(gap_stat)
 ```
@@ -35,6 +26,12 @@ fviz_gap_stat(gap_stat)
 fviz_cluster(km, data = tokmeans)
 ```
 
+```{r}
+pca <- prcomp(tokmeans,  scale = TRUE)
+kable(pca$rotation[,1:2], digits = 2, caption = 'Loadings of two main principal components.')
+```
+
+
 
 ```{r}
 kable(importance(rf10), digits = 2, col.names = c('Madeira', 'Pará', 'Rondônia', 'Roraima', 'Xingu-Tapajos', 'Decrease Accuracy', 'Decrease Gini') ,caption = 'Variable importace to classfy by province, and for general random forest performance.')
@@ -43,5 +40,16 @@ kable(importance(rf10), digits = 2, col.names = c('Madeira', 'Pará', 'Rondônia
 
 ```{r}
 kable(importance(rf70), digits = 2, col.names = c('Madeira', 'Pará', 'Rondônia', 'Roraima', 'Xingu-Tapajos', 'Decrease Accuracy', 'Decrease Gini') ,caption = 'Variable importace to classfy by province, and for general random forest performance.')
+```
+
+## Suplemmentar Material
+
+
+```{r}
+kable(dados10, digits = 2, caption = 'Resume of the sites characteristics considering trees greater than 10 cm')
+```
+
+```{r}
+kable(dados70, digits = 2, caption = 'Resume of the sites characteristics considering trees greater than 70 cm')
 ```
 

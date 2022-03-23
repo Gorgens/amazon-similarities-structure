@@ -27,7 +27,7 @@ csl: abnt.csl
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
-                      echo = FALSE)
+                      echo = TRUE)
 ```
 
 
