@@ -1,0 +1,117 @@
+Variable;1;2;3;4
+spH_10;0,567;-3,114;0,095;1,580
+genH_10;0,559;-3,451;0,139;0,795
+famH_10;0,261;-3,729;0,165;0,590
+dmean_10;5,236;0,397;-0,103;-0,181
+dmax_10;1,359;-0,639;-0,007;0,478
+dsd_10;1,914;-0,698;0,019;-0,462
+wdmean_10;0,597;-1,869;0,057;0,835
+wdsd_10;0,383;-3,321;0,171;-0,263
+spH_70;2,558;-1,791;-0,020;2,012
+genH_70;2,372;-1,854;-0,003;1,671
+famH_70;2,012;-2,064;0,022;1,438
+dmean_70;-0,340;-1,584;0,103;-0,485
+dmax_70;1,344;-0,855;0,004;0,480
+dsd_70;-0,125;-0,871;0,053;-0,206
+wdmean_70;0,603;-1,902;0,058;0,834
+wdsd_70;0,469;-1,926;0,088;0,065
+Alexa grandiflora_10;7,919;-0,136;-0,123;-0,136
+Brosimum rubescens;-0,221;2,369;-0,162;1,347
+Carapa guianensis_10;7,875;-0,167;-0,123;-0,066
+Conceveiba guianensis_10;7,900;-0,160;-0,133;0,215
+Ecclinusa lanceolata;7,938;-0,127;-0,125;-0,089
+Eperua rubiginosa_10;7,938;-0,124;-0,124;-0,124
+Eschweilera coriacea_10;7,204;-0,285;-0,163;1,624
+Eschweilera odora;-0,190;-0,190;0,019;-0,190
+Eschweilera pedicellata_10;7,896;-0,156;-0,136;0,290
+Eschweilera truncata;-0,207;-0,207;-0,171;5,449
+Eschweilera wachenheimii;-0,200;-0,200;-0,170;5,409
+Euterpe precatoria;-0,269;-0,269;-0,013;0,935
+Goupia glabra_10;7,889;-0,171;-0,139;0,411
+Guarea pubescens_10;7,937;-0,128;-0,124;-0,116
+Inga auristellae_10;7,938;-0,125;-0,124;-0,125
+Iriartea deltoidea;-0,360;-0,360;0,037;-0,360
+Iryanthera paraensis;7,937;-0,128;-0,124;-0,128
+Lecythis idatimon;-0,333;-0,333;0,034;-0,333
+Lecythis lurida_10;7,932;-0,135;-0,123;-0,135
+Licania canescens_10;7,924;-0,147;-0,125;-0,066
+Licania heteromorpha;0,647;-0,375;-0,135;4,226
+Licania octandra_10;7,407;-0,202;-0,121;0,178
+Metrodorea flavida;-0,371;-0,371;0,038;-0,371
+Micropholis acutangula_10;7,937;-0,129;-0,125;-0,091
+Micropholis guyanensis;-0,360;-0,360;-0,146;5,029
+Micropholis longipedicellata;7,938;-0,124;-0,124;-0,124
+Micropholis venulosa_10;7,916;-0,138;-0,134;0,197
+Minquartia guianensis_10;7,726;-0,205;-0,157;1,063
+Mouriri apiranga;7,850;-0,144;-0,121;-0,144
+Neoxythece elegans;7,907;-0,140;-0,122;-0,140
+Oenocarpus bacaba;-0,271;-0,271;-0,143;4,747
+Oenocarpus bataua;-0,258;-0,258;-0,099;3,423
+Pouteria caimito_10;7,930;-0,142;-0,130;0,070
+Protium altsonii;7,762;-0,187;-0,151;0,858
+Protium apiculatum;0,796;-0,284;-0,069;2,050
+Protium decandrum_10;7,902;-0,166;-0,129;0,101
+Protium hebetatum;-0,195;-0,195;-0,160;5,102
+Protium tenuifolium_10;7,930;-0,145;-0,123;-0,109
+Pseudolmedia laevis;-0,146;-0,478;-0,067;2,763
+Rinorea guianensis;-0,370;-0,370;-0,004;0,868
+Sagotia brachysepala;-0,124;-0,124;0,013;-0,124
+Scleronema micranthum;-0,247;-0,247;-0,161;5,239
+Sloanea grandiflora_10;7,937;-0,132;-0,123;-0,132
+Symphonia globulifera_10;7,800;-0,215;-0,131;0,291
+Tabebuia serratifolia_10;7,933;-0,141;-0,124;-0,088
+Tachigali myrmecophila_10;7,876;-0,181;-0,124;0,006
+Tetragastris altissima;-0,381;-0,157;0,027;-0,381
+Theobroma speciosum;0,042;-0,451;0,038;-0,451
+Virola michelii;7,800;-0,243;-0,118;-0,047
+Vouacapoua americana_10;7,703;-0,167;-0,116;-0,167
+Abarema jupunba;7,905;-0,160;-0,130;0,112
+Alexa grandiflora_70;7,919;-0,136;-0,123;-0,136
+Aspidosperma excelsum;7,937;-0,128;-0,124;-0,128
+Bertholletia excelsa;0,440;-0,105;0,011;-0,377
+Bowdichia nitida;7,932;-0,133;-0,124;-0,118
+Brosimum parinarioides;7,109;-0,227;-0,173;1,880
+Carapa guianensis_70;7,875;-0,167;-0,123;-0,066
+Caryocar glabrum;7,342;-0,283;-0,156;1,358
+Caryocar villosum;7,895;-0,154;-0,140;0,414
+Conceveiba guianensis_70;7,900;-0,160;-0,133;0,215
+Couratari guianensis;7,907;-0,161;-0,131;0,151
+Dinizia excelsa;7,906;-0,152;-0,133;0,184
+Dipteryx odorata;7,866;-0,167;-0,142;0,518
+Eperua rubiginosa_70;7,938;-0,124;-0,124;-0,124
+Erisma uncinatum;7,339;-0,251;-0,117;0,153
+Eschweilera coriacea_70;7,204;-0,285;-0,163;1,624
+Eschweilera pedicellata_70;7,896;-0,156;-0,136;0,290
+Geissospermum sericeum;7,727;-0,198;-0,114;-0,198
+Goupia glabra_70;7,889;-0,171;-0,139;0,411
+Guarea pubescens_70;7,937;-0,128;-0,124;-0,116
+Hymenaea courbaril;7,764;-0,131;-0,119;-0,188
+Hymenolobium petraeum;7,916;-0,144;-0,122;-0,144
+Inga auristellae_70;7,938;-0,125;-0,124;-0,125
+Lecythis lurida_70;7,932;-0,135;-0,123;-0,135
+Lecythis pisonis;7,903;-0,156;-0,132;0,164
+Licania canescens_70;7,924;-0,147;-0,125;-0,066
+Licania octandra_70;7,407;-0,202;-0,121;0,178
+Manilkara huberi;7,856;-0,178;-0,126;0,066
+Micropholis acutangula_70;7,937;-0,129;-0,125;-0,091
+Micropholis venulosa_70;7,916;-0,138;-0,134;0,197
+Minquartia guianensis_70;7,726;-0,205;-0,157;1,063
+Nectandra rubra;7,932;-0,131;-0,123;-0,131
+Osteophloeum platyspermum;7,819;-0,181;-0,147;0,688
+Parinarium Juss.;7,938;-0,124;-0,124;-0,124
+Parkia pendula;7,419;-0,286;-0,156;1,308
+Pouteria caimito_70;7,930;-0,142;-0,130;0,070
+Protium decandrum_70;7,902;-0,166;-0,129;0,101
+Protium tenuifolium_70;7,930;-0,145;-0,123;-0,109
+Pseudopiptadenia psilostachya;7,849;-0,173;-0,145;0,618
+Qualea albiflora;7,937;-0,129;-0,124;-0,129
+Sloanea grandiflora_70;7,937;-0,132;-0,123;-0,132
+Stryphnodendron pulcherrimum;7,932;-0,139;-0,129;0,035
+Symphonia globulifera_70;7,800;-0,215;-0,131;0,291
+Tabebuia serratifolia_70;7,933;-0,141;-0,124;-0,088
+Tachigali myrmecophila_70;7,876;-0,181;-0,124;0,006
+Terminalia amazonia;7,859;-0,166;-0,119;-0,166
+Vantanea parviflora;7,714;-0,174;-0,161;1,162
+Vochysia guianensis;7,885;-0,148;-0,121;-0,148
+Vochysia maxima;7,858;-0,151;-0,120;-0,151
+Vouacapoua americana_70;7,703;-0,167;-0,116;-0,167
