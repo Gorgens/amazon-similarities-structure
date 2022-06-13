@@ -21,7 +21,7 @@ The study is based on the ForestPlots plot network, including recent plots where
 Each tree in the dataset was associated to a basic wood density using the lowest available taxonomic level of botanical identifications (i.e. species or genus) and the corresponding average wood density recorded in the Global Wood Density Database (GWDD; Chave et al., 2009; Zanne et al., 2009). The plots were totalized in terms of structure and diversity. The diversity was computed using the Shannon index, for species, genus and family level. The structural attributes were computed to mean, maximum and standard deviation for diameter; and mean and standard deviation for basic wood density. 
 
 ```{r}
-full = read.csv2('C:/Users/User/Insync/eric.gorgens@ufvjm.edu.br/Google Drive/pesquisa/paper e orientações/eba transectos lidar/2022 - Robson - Agrupamento estrutura e diversidade/dados_full_10cm.csv')
+full = read.csv2('C:/Users/User/Documents/RStudio/secrets-robson/dados_full_10cm.csv')
 full[full$site == 'STO','site'] <- 'STO.P'
 full[full$site == 'STP','site'] <- 'STO.P'
 full[full$site == 'MUF','site'] <- 'MUF.U'
