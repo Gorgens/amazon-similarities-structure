@@ -1,1 +1,7 @@
-# amazon-similarities_structure
+# Diversity and Big Trees Patterns in the Brazilian Amazon
+
+Authors: Robson Borges de Lima, Eric Bastos Görgens, Anderson Pedro Bernardina Batista, Diego Armando Silva da Silva, Cinthia Pereira de Oliveira and Carla Samara Campelo de Sousa.
+
+Abstract: The increasing availability of field data presents an opportunity to understand the fundamental ecological relationships and functions of large trees in tropical forests at regional and global scales. However, it is not always clear what the relationships or patterns of diversity and structure are among sites in different biogeographic regions. We evaluated the relationship of the biomass and diameter of the largest trees with a diversity of species and compared, between the sites, the attributes of structure, diversity, and the influence of the 50 hyperdominant species in each site, aiming at the potential formation of groups by sites with characteristics and patterns of similar diversity within biogeographic regions. The average wood density together with the diversity of genera and families are the most important attributes to discriminate biogeographic regions when considering all forest information. Large trees play a fundamental role in forest ecology and seem to express regional environmental characteristics. The upper canopy of tropical forests remains one of the least studied environments in all terrestrial biomes, and is often referred to as “the last biotic frontier” or a “black box,” and large trees are also part of this mysterious frontier.
+
+Link to the manuscript: https://www.mdpi.com/1424-2818/14/7/503/pdf
